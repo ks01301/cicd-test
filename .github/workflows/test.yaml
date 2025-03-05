@@ -14,10 +14,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-      - name: npm ci
-        run: npm ci
-      - name: npm test
-        run: npm test
+      - name: Install pnpm
+        run: npm install -g pnpm
+      - name: pnpm ci
+        run: pnpm install --frozen-lockfile
+      - name: pnpm test
+        run: pnpm test
 
   build:
     runs-on: ubuntu-latest
@@ -29,7 +31,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-      - name: npm ci
-        run: npm ci
-      - name: bulid
-        run: npm run build
+      - name: Install pnpm
+        run: npm install -g pnpm
+      - name: pnpm ci
+        run: pnpm install --frozen-lockfile
+      - name: pnpm build
+        run: pnpm build
