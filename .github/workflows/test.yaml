@@ -28,8 +28,6 @@ jobs:
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
 
       - name: pnpm ci
         run: pnpm install --frozen-lockfile
@@ -54,12 +52,16 @@ jobs:
           cache: "pnpm"
 
       - name: Cache Node.js modules
+        id: npm-cache
         uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+
+      - if: steps.npm-cache.outputs.cache-hit == 'true'
+        run: echo 'npm cache hit!'
+      - if: steps.npm-cache.outputs.cache-hit != 'true'
+        run: echo 'npm cache missed!'
 
       - name: pnpm ci
         run: pnpm install --frozen-lockfile
