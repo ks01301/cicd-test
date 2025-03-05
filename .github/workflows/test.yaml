@@ -8,14 +8,16 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
+      - run: pwd
 
       - name: install Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-      - run: |
-          npm ci
-          npm test
+      - name: npm ci
+        run: npm ci
+      - name: npm test
+        run: npm test
 
   build:
     runs-on: ubuntu-latest
@@ -27,6 +29,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-      - run: |
-          npm ci
-          npm build
+      - name: npm ci
+        run: npm ci
+      - name: bulid
+        run: npm run build
