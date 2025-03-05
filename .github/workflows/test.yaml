@@ -14,8 +14,7 @@ jobs:
         with:
           node-version-file: .nvmrc
       - run: |
-          npm install pnpm
-          pnpm install
+          npm ci
           pnpm test
 
   build:
