@@ -1,8 +1,12 @@
 name: Node.js CI/CD
 
 on:
-  - push
-  - pull_request
+  push:
+    branches: [main, dev]
+
+env:
+  DEFAULT_NODE_VERSION: "20.x"
+  NODE_VERSION: ""
 
 jobs:
   test:
@@ -17,10 +21,22 @@ jobs:
         with:
           version: 10
           run_install: false
+
+      - name: check Node.js version
+        run: cat .nvmrc > ${{env.NODE_VERSION}}}
+
+      - name: print NODE_VERSION
+        run: cat ${{env.NODE_VERSION}}
+
+      - if: ${{env.NODE_VERSION == ''}}
+        run: echo ${{env.DEFAULT_NODE_VERSION}} > ${{env.NODE_VERSION}}
+
+      - run: echo ${{env.NODE_VERSION}}
+
       - name: install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: .nvmrc
+          node-version: ${{env.NODE_VERSION}}
           cache: "pnpm"
 
       - name: pnpm ci
