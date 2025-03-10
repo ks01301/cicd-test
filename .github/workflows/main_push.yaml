@@ -6,7 +6,6 @@ on:
 
 env:
   DEFAULT_NODE_VERSION: "20.x"
-  NODE_VERSION: ""
 
 jobs:
   test:
@@ -39,6 +38,7 @@ jobs:
             NODE_VERSION=${{ env.DEFAULT_NODE_VERSION }}
           fi
           echo "NODE_VERSION=$NODE_VERSION" >> $GITHUB_ENV
+          echo "NODE_VERSION=$NODE_VERSION" >> $GITHUB_ENV_OUTPUT
 
       - run: echo "${{env.NODE_VERSION}}"
 
@@ -64,10 +64,13 @@ jobs:
         with:
           version: 10
           run_install: false
+
+      - name: check version
+        run: echo "${{needs.test.outputs.NODE_VERSION}}"
       - name: install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: .nvmrc
+          node-version-file: ${{needs.test.outputs.NODE_VERSION}}
           cache: "pnpm"
       - name: pnpm ci
         run: pnpm install --frozen-lockfile
