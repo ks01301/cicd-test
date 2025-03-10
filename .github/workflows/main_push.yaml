@@ -10,6 +10,8 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+    outputs:
+      NODE_VERSION: ${{ steps.export_env.outputs.NODE_VERSION }} # outputs로 전달
     steps:
       - name: checkout
         uses: actions/checkout@v4
@@ -31,6 +33,7 @@ jobs:
         run: $NODE_VERSION
 
       - name: env set
+        id: export_env
         run: |
           if [ -f .nvmrc ]; then
             NODE_VERSION=$(cat .nvmrc)
@@ -65,7 +68,7 @@ jobs:
           version: 10
           run_install: false
 
-      - run: echo "${{needs.test.outputs}}"
+      - run: echo "${{needs.test.outputs.}}"
 
       - name: check version
         run: echo "${{needs.test.outputs}}"
