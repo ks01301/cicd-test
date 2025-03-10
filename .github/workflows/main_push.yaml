@@ -38,7 +38,7 @@ jobs:
             NODE_VERSION=${{ env.DEFAULT_NODE_VERSION }}
           fi
           echo "NODE_VERSION=$NODE_VERSION" >> $GITHUB_ENV
-          echo "NODE_VERSION=$NODE_VERSION" >> $GITHUB_ENV_OUTPUT
+          echo "NODE_VERSION=$NODE_VERSION" >> $GITHUB_OUTPUT
 
       - run: echo "${{env.NODE_VERSION}}"
 
