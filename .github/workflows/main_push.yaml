@@ -25,11 +25,11 @@ jobs:
       - name: check Node.js verison test
         run: cat .nvmrc
 
-      - name: check Node.js version
-        run: cat .nvmrc >> $NODE_VERSION
+      - name: set Node.js version
+        run: NODE_VERSION=$(cat .nvmrc) >> $NODE_VERSION
 
       - name: print NODE_VERSION
-        run: cat "NODE_VERSION
+        run: $NODE_VERSION
 
       - if: ${{env.NODE_VERSION == ''}}
         run: echo "${{env.DEFAULT_NODE_VERSION}}" >> ${{env.NODE_VERSION}}
