@@ -23,15 +23,15 @@ jobs:
           run_install: false
 
       - name: check Node.js version
-        run: cat .nvmrc > ${{env.NODE_VERSION}}}
+        run: cat .nvmrc >> ${{env.NODE_VERSION}}
 
       - name: print NODE_VERSION
-        run: cat ${{env.NODE_VERSION}}
+        run: cat "${{env.NODE_VERSION}}
 
       - if: ${{env.NODE_VERSION == ''}}
-        run: echo ${{env.DEFAULT_NODE_VERSION}} > ${{env.NODE_VERSION}}
+        run: echo "${{env.DEFAULT_NODE_VERSION}}" >> ${{env.NODE_VERSION}}
 
-      - run: echo ${{env.NODE_VERSION}}
+      - run: echo "${{env.NODE_VERSION}}"
 
       - name: install Node.js
         uses: actions/setup-node@v4
