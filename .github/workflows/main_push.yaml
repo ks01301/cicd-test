@@ -1,20 +1,22 @@
-name: Node.js CI/CD
+name: test CI/CD
 
 on:
   push:
     branches: [main, dev]
 
-env:
-  DEFAULT_NODE_VERSION: "20.x"
+env: #환경변수
+  DEFAULT_NODE_VERSION: "20.x" #node.js 기본 버전 설정
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    outputs:
-      NODE_VERSION: ${{ steps.export_env.outputs.NODE_VERSION }} # outputs로 전달
+    outputs: # job에서 생성한 환경변수를 다른 job에서 사용할 수 있도록 설정
+      # {{steps.[step_id].ouputs.[환경변수]}}
+      NODE_VERSION: ${{ steps.export_env.outputs.NODE_VERSION }}
     steps:
       - name: checkout
         uses: actions/checkout@v4
+
       - run: pwd
 
       - uses: pnpm/action-setup@v4
@@ -22,18 +24,10 @@ jobs:
         with:
           version: 10
           run_install: false
-
-      - name: check Node.js verison test
-        run: cat .nvmrc
-
-      - name: set Node.js version
-        run: NODE_VERSION=$(cat .nvmrc) >> $NODE_VERSION
-
-      - name: print NODE_VERSION
-        run: $NODE_VERSION
-
-      - name: env set
-        id: export_env
+      - name: Check and Set Node Version # Node Version 설정
+        id: export_env # outputs에 입력할 step id
+        # .nvmrc 파일이 있으면 NODE_VERSION을 .nvmrc의 정의된 버전으로 설정
+        # .nvmrc 파일이 없으면 DEFAULT_NODE_VERSION으로 NODEVERSION을 설정
         run: |
           if [ -f .nvmrc ]; then
             NODE_VERSION=$(cat .nvmrc)
@@ -43,7 +37,8 @@ jobs:
           echo "NODE_VERSION=$NODE_VERSION" >> $GITHUB_ENV
           echo "NODE_VERSION=$NODE_VERSION" >> $GITHUB_OUTPUT
 
-      - run: echo "${{env.NODE_VERSION}}"
+      - name: check Node Version
+        run: echo "${{env.NODE_VERSION}}"
 
       - name: install Node.js
         uses: actions/setup-node@v4
@@ -53,6 +48,7 @@ jobs:
 
       - name: pnpm ci
         run: pnpm install --frozen-lockfile
+
       - name: pnpm test
         run: pnpm test
 
@@ -62,23 +58,25 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
         with:
           version: 10
           run_install: false
 
-      - run: echo "${{needs.test.outputs.NODE_VERSION}}"
-
-      - name: check version
-        run: echo "${{needs.test.outputs}}"
+      - name: check Node.js Verison
+        # ${{needs.[output_job_name].outputs.[환경 변수]}}
+        run: echo "${{needs.test.outputs.NODE_VERSION}}"
 
       - name: install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{needs.test.outputs.NODE_VERSION}}
           cache: "pnpm"
+
       - name: pnpm ci
         run: pnpm install --frozen-lockfile
+
       - name: pnpm build
         run: pnpm build
