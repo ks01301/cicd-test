@@ -73,7 +73,7 @@ jobs:
       - name: install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: ${{needs.test.outputs.NODE_VERSION}}
+          node-version: ${{needs.test.outputs.NODE_VERSION}}
           cache: "pnpm"
       - name: pnpm ci
         run: pnpm install --frozen-lockfile
