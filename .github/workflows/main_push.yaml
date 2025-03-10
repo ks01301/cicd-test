@@ -65,8 +65,10 @@ jobs:
           version: 10
           run_install: false
 
+      - run: echo "${{needs.test.outputs}}"
+
       - name: check version
-        run: echo "${{needs.test.outputs.NODE_VERSION}}"
+        run: echo "${{needs.test.outputs}}"
 
       - name: install Node.js
         uses: actions/setup-node@v4
